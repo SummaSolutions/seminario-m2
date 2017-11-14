@@ -10,7 +10,7 @@ services:
       - db
       - phpfpm
     volumes: &appvolumes
-      - appdata:/var/www/html
+      - ./appdata:/var/www/html
     ports:
       - 8000:80
     networks: &appnetworks
