@@ -1,115 +1,40 @@
-This docker-compose.yml file is provided by Mage Inferno
+# Instalar docker 17.09.0-ce (>= 1.13.0)
+Usar instrucciones en [https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/#if-you-need-to-use-aufs](https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/#if-you-need-to-use-aufs)
 
-## Docker Hub
-
-View our Docker Hub images at [https://hub.docker.com/u/mageinferno/](https://hub.docker.com/u/mageinferno/)
-
-## Usage
-
-This file is provided as an example development environment using Mage Inferno Magento 2 Docker Images.
-
-## Composer Setup
-
-### Authentication
-
-Uncomment the composer line from `appdata` to mount a `.composer` directory to the `www-data` user home directory. Please first setup Magento Marketplace authentication (details at <a href="http://devdocs.magento.com/guides/v2.0/install-gde/prereq/connect-auth.html" target="_blank">http://devdocs.magento.com/guides/v2.0/install-gde/prereq/connect-auth.html</a>).
-
-Place your auth token at `~/.composer/auth.json` with the following contents, like so:
-
-```
-{
-    "http-basic": {
-        "repo.magento.com": {
-            "username": "MAGENTO_PUBLIC_KEY",
-            "password": "MAGENTO_PRIVATE_KEY"
-        }
-    }
-}
+# Intalar docker-compose 1.17.0
+Usar instrucciones en [https://docs.docker.com/compose/install/#install-compose](https://docs.docker.com/compose/install/#install-compose)
+```bash
+sudo chmod +x /usr/local/bin/docker-compose
+sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 ```
 
-Then, just set `M2SETUP_USE_ARCHIVE` to `false` in your ./env/setup.env file. 
-
-### Magento Enterprise 
-
-You can install Magento Enterprise via Composer by setting `M2SETUP_USE_COMPOSER_ENTERPRISE=true` in your ./env/setup.env file.
-
-## Composer-less, No-Auth Setup
-
-If you don't want to use Composer or setup the auth keys above, no worries. Mage Inferno install script uses Nexcess' hosted Magento archives for a Composer-less install process. Just set the `M2SETUP_USE_ARCHIVE` environment variable to `true` when running setup.
-
-## Running Setup
-
-Using the above `docker-compose.yml` file, all you need to do is run one line to install Magento 2:
-
+# Clonar repositorio de git
+```bash
+git clone git@github.com:SummaSolutions/seminario-m2.git
 ```
+
+# Setup de ambiente
+```bash
+cd magento2-docker-compose
 docker-compose run --rm setup
 ```
 
-You may modify any environment variables depending on your requirements.
-
-## Data Volumes
-
-Your Magento source data is persistently stored within Docker data volumes. For local development, we advise copying the entire contents of the `appdata` data volume to your local machine (after setup is complete of course). Since you shouldn't be modifying any of these files, this is just to bring the fully copy of the site back to your host:
-
-```
-docker cp CONTAINERID:/var/www/html ./
+# Correr ambiente
+```bash
+docker-compose up
 ```
 
-Then, just uncomment the `./html/app/code:/var/www/html/app/code` and `./html/app/design:/var/www/html/app/design` lines within your docker-compose.override.yml file (appdata > volumes). This mounts your local `app/code` and `app/design` directories to the Docker data volume. Then, just restart your containers:
+Visitar [http://m2.localhost:8000/](http://m2.localhost:8000/)
 
-```
-docker-compose up -d app
-```
-
-Any edits to these directories will correctly sync with your Docker volume.
-
-## Running Magento CLI tool
-
-We've setup scripts to aid in the running of Magento CLI tool with the correct permissions. To run the command line tool, you would connect as any other Docker Compose application would:
-
-```
-docker-compose exec phpfpm ./bin/magento
+# Detener ambiente
+```bash
+docker stop magento2dockercompose_app_1 magento2dockercompose_phpfpm_1 magento2dockercompose_db_1
 ```
 
-or with straight Docker command:
-
-```
-docker exec NAME_OF_PHPFPM_CONTAINER ./bin/magento
-```
-
-You can easily set these up as aliases inside your `~/.bash_profile` file (or a similar script) as so:
-
-```
-alias magento='docker-compose exec phpfpm ./bin/magento'
-```
-This will allow you to clear the cache by running the following command right in terminal:
-
-```
-magento cache:flush
+# Ingresar al bash del web server
+```bash
+docker exec -it magento2dockercompose_app_1 /bin/bash
 ```
 
-## Docker Compose Override
 
-You can copy `docker-compose.override.yml.dist` to `docker-compose.override.yml` and adjust environment variables, volume mounts etc in the `docker-compose.override.yml` file to avoid losing local configuration changes when you pull changes to this repository. 
-
-Docker Compose will automatically read any of the values you define in the file. See [this link](https://docs.docker.com/compose/extends/#/understanding-multiple-compose-files) for more information about the override file. 
-
-
-## Troubleshooting
-
-### Setup Error
-
-A common error when running setup is receiving this error:
-
-```
-SQLSTATE[HY000] [2002] Connection refused
-
-  [InvalidArgumentException]
-  Parameter validation failed
-```
-
-If you receive this error, it's because the database driver has not initialized before the setup script commences execution. The easy fix for this is to run the setup command again immediately after this error:
-
-### PHP 7.1 Unusable
-
-[PHP 7.1 will not be supported until Magento 2.2](https://github.com/magento/magento2/issues/5880)
+Para más información ver documentación de [Magento 2 Docker Composer](https://github.com/mageinferno/magento2-docker-compose)
