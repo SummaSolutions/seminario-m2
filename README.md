@@ -10,7 +10,7 @@ sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 
 # Clonar repositorio de git
 ```bash
-git clone git@github.com:SummaSolutions/seminario-m2.git
+git clone https://github.com/SummaSolutions/seminario-m2.git
 ```
 
 # Setup de ambiente
@@ -36,5 +36,19 @@ docker stop magento2dockercompose_app_1 magento2dockercompose_phpfpm_1 magento2d
 docker exec -it magento2dockercompose_app_1 /bin/bash
 ```
 
+# Ejecutar comandos de consola de Magento
+```bash
+docker-compose exec phpfpm ./bin/magento
+```
+
+Se puede armar un alias de manera que sea más facil
+```bash
+alias magento="docker-compose exec phpfpm ./bin/magento"
+```
+
+# Instalar Magento
+```bash
+magento setup:install --db-name=magento --base-url=http://seminario-m2.localhost/ --admin-user=tudai --admin-password=magento2 --admin-email=fcapua@summasolutions.net --admin-firstname=Facundo --admin-lastname=Capua --use-sample-data --db-password=root
+```
 
 Para más información ver documentación de [Magento 2 Docker Composer](https://github.com/mageinferno/magento2-docker-compose)
