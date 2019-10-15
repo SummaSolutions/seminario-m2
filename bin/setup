@@ -12,7 +12,7 @@ rm -rf src/vendor #Clear for step below
 bin/push --all
 
 echo "Forcing reinstall of composer deps to ensure perms & reqs..."
-bin/composer composer install --prefer-dist --ignore-platform-reqs
+bin/composer install --prefer-dist --ignore-platform-reqs
 
 echo "set perms to bin/magento"
 bin/cli chmod u+x bin/magento
