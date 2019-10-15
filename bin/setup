@@ -23,7 +23,7 @@ bin/magento setup:install \
     --db-name=$DATABASE_NAME \
     --db-user=$DATABASE_USER \
     --db-password=$DATABASE_PASSWORD \
-    --base-url=https://$BASE_URL/ \
+    --base-url=https://$VIRTUAL_HOST/ \
     --admin-firstname=$M2SETUP_ADMIN_FIRSTNAME \
     --admin-lastname=$M2SETUP_ADMIN_LASTNAME \
     --admin-email=$M2SETUP_ADMIN_EMAIL \
@@ -63,8 +63,8 @@ echo "Restarting containers with host bind mounts for dev..."
 bin/restart
 
 echo "Docker development environment setup complete."
-echo "You may now access your Magento instance at https://${BASE_URL}/"
+echo "You may now access your Magento instance at https://${VIRTUAL_HOST}/"
 echo ""
-echo "You may now access your Admin Magento instance at https://${BASE_URL}/admin"
+echo "You may now access your Admin Magento instance at https://${VIRTUAL_HOST}/admin"
 echo  "Admin user: $ADMIN_USER"
 echo  "Admin pass: $ADMIN_PASS"
