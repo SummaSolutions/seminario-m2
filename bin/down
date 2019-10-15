@@ -1,0 +1,8 @@
+#!/bin/bash
+
+echo "stop and remove containers"
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml down
+
+echo "remove docker volumes"
+docker volume rm ${PWD##*/}_dbdata 2>/dev/null 
+docker volume rm ${PWD##*/}_appdata-magento2 2>/dev/null   

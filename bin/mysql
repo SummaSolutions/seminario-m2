@@ -1,0 +1,3 @@
+#!/bin/bash
+
+docker-compose exec mysql bash -c "export COLUMNS=`tput cols`; export LINES=`tput lines`; exec bash"

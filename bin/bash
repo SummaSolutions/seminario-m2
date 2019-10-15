@@ -1,0 +1,8 @@
+#!/bin/bash
+
+if [ "$1" = "--root" ]
+then
+    docker-compose -f docker-compose.yml exec -uroot php bash -c "export COLUMNS=`tput cols`; export LINES=`tput lines`; exec bash"
+else
+    docker-compose -f docker-compose.yml exec php bash -c "export COLUMNS=`tput cols`; export LINES=`tput lines`; exec bash"
+fi;    

@@ -1,49 +1,109 @@
-# Mage Inferno Docker Compose (https://github.com/mageinferno/magento2-docker-compose)
-# Version 7.0.0
-
-version: "3"
+version: "2"
 
 services:
-  app:
-    image: mageinferno/magento2-nginx:1.11-1
-    links:
-      - db
-      - phpfpm
-    volumes: &appvolumes
-      - ./appdata:/var/www/html
+  web:
+    image: nginx:latest
+    env_file: .env
     ports:
-      - 8000:80
-    networks: &appnetworks
-      - www
+      - "${HTTP_BINDED_PORT}:80"
+      - "${HTTPS_BINDED_PORT}:443"      
+    tty: true
+    volumes:
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./docker/nginx/ssl:/etc/nginx/ssl
+      - ./docker/nginx/auth:/etc/nginx/auth
+      - ${NGINX_CONFIG_FILE}:/etc/nginx/sites-enabled/default.conf
+      - ./docker/docker/volumes/nginx/logs:/var/log/nginx
+    environment:
+      VIRTUAL_HOST: ${VIRTUAL_HOST}
+    volumes_from:
+      - appdata:ro
+    depends_on:
+      - php
+    networks:
+      - back
 
-  phpfpm:
-    image: mageinferno/magento2-php:7.0-fpm-1
-    links:
-      - db
-    volumes: *appvolumes
-    networks: *appnetworks
+  php:
+    image: summasolutions/php:${PHP_VERSION}
+    volumes:
+      - ./docker/php/php.ini:/usr/local/etc/php/php.ini
+      - ./docker/php/php-fpm.conf:/usr/local/etc/php-fpm.conf
+      - ./docker/php/ext-xdebug.ini:/usr/local/etc/php/conf.d/ext-xdebug.ini
+      - ./docker/php/ext-ioncube.ini:/usr/local/etc/php/conf.d/10-php-ext-ioncube.ini
+    volumes_from:
+      - appdata
+    env_file: .env
+    environment:
+        XDEBUG_CONFIG: ${XDEBUG_CONFIG}
+        PHP_IDE_CONFIG: ${PHP_IDE_CONFIG}
+    depends_on:
+      - appdata
+    user: www-data
+    networks:
+      - back
 
-  db:
-    image: percona:5.7
+  appdata:
+    image: alpine:latest
+    volumes:
+      - ./docker/appdata/startup.sh:/startup.sh
+      - ./docker/appdata/.bashrc:/var/www/.bashrc
+      - ./docker/appdata/.bashrc:/root/.bashrc
+    command: /bin/sh /startup.sh
+
+  mysql:
+    image: mysql:5.7
+    env_file: .env
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DATABASE_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DATABASE_NAME}
+      MYSQL_USER: ${DATABASE_USER}
+      MYSQL_PASSWORD: ${DATABASE_PASSWORD}
     volumes:
       - dbdata:/var/lib/mysql
-    ports:
-      - 8001:3306
-    networks: *appnetworks
-    env_file: env/mysql.env
+      - ./dumps:/dumps
+    networks:
+      - back
 
-  setup:
-    image: mageinferno/magento2-php:7.0-fpm-1
-    command: /usr/local/bin/mage-setup
-    links:
-      - db
-    volumes: *appvolumes
-    networks: *appnetworks
-    env_file: env/setup.env
+  redis-cache:
+    image: redis:${REDIS_CACHE_VERSION}
+    env_file: .env
+    ports:
+      - "6379"
+    networks:
+      - back
+
+  redis-session:
+    image: redis:${REDIS_SESSION_VERSION}
+    env_file: .env
+    ports:
+      - "6379"
+    networks:
+      - back
+
+  redis-fpc:
+    image: redis:${REDIS_FPC_VERSION}
+    env_file: .env
+    ports:
+      - "6379"
+    networks:
+      - back      
+
+  mailhog:
+    image: mailhog/mailhog
+    env_file: .env
+    hostname: "mailhog"
+    ports:
+      - 1025
+      - "${MAILHOG_BINDED_PORT}:8025"
+    networks:
+      - back
+
+networks:
+  back:
+    driver: bridge
 
 volumes:
   dbdata:
-  appdata:
-
-networks:
-  www:
+  appdata-magento2:
