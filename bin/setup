@@ -5,18 +5,24 @@
 . env/setup.env
 
 echo "starting container..."
-docker-compose -f docker-compose.yml up -d
+bin/start
 sleep 3 #Ensure containers are started...
 
 echo "Copying all files from host to container..."
-rm -rf src/vendor #Clear for step below
+#Clear for step below
+rm -rf src/vendor 
 bin/push --all
+
+bin/cli [ -f bin/magento ] && chmod u+x bin/magento
+bin/cli [ -f bin/magento ] && chown www-data:www-data bin/magento
 
 echo "Forcing reinstall of composer deps to ensure perms & reqs..."
 bin/composer install --prefer-dist --ignore-platform-reqs
 
-echo "set perms to bin/magento"
-bin/cli chmod u+x bin/magento
+bin/cli [ -f bin/magento ] && chmod u+x bin/magento
+bin/cli [ -f bin/magento ] && chown www-data:www-data bin/magento
+
+sleep 3 #Ensure containers are started...
 
 bin/magento setup:install \
     --backend-frontname=admin \
@@ -33,6 +39,7 @@ bin/magento setup:install \
     --language=$M2SETUP_LANGUAGE \
     --currency=$M2SETUP_CURRENCY \
     --timezone=$M2SETUP_TIMEZONE \
+    --cleanup-database \
     --use-rewrites=1
 
 echo "Turning on developer mode.."
@@ -67,5 +74,5 @@ echo "Docker development environment setup complete."
 echo "You may now access your Magento instance at https://${VIRTUAL_HOST}/"
 echo ""
 echo "You may now access your Admin Magento instance at https://${VIRTUAL_HOST}/admin"
-echo  "Admin user: $ADMIN_USER"
-echo  "Admin pass: $ADMIN_PASS"
+echo  "Admin user: $M2SETUP_ADMIN_USER"
+echo  "Admin pass: $M2SETUP_ADMIN_PASSWORD"
