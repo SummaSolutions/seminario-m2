@@ -25,7 +25,7 @@ Más detalles y opciones de instalación Mac
 
 
 
-Verificar versión
+# Verificar versión
 ```bash
     docker --version
     docker-compose --version
@@ -54,6 +54,8 @@ Y agregar la siguiente linea al final:
 127.0.0.1   magento2.localhost
 ```
 
+
+# Verificar sitio
 
 Visitar [https://magento2.localhost/](https://magento2.localhost/)
 
