@@ -1,5 +1,5 @@
 # Development environment reusing production and just adding mounts for docker-sync
-version: "2"
+version: "2.1"
 
 services:
   appdata:
