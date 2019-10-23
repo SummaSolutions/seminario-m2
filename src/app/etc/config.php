@@ -224,6 +224,7 @@ return [
         'Magento_WishlistGraphQl' => 1,
         'Magento_WishlistSampleData' => 1,
         'Temando_Shipping' => 1,
+        'Tudai_CuentaCorriente' => 1,
         'Vertex_Tax' => 1
     ]
 ];
