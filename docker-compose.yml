@@ -43,12 +43,10 @@ services:
       - back
 
   appdata:
-    image: alpine:latest
+    image: summasolutions/magento:seminario-m2
     volumes:
-      - ./docker/appdata/startup.sh:/startup.sh
       - ./docker/appdata/.bashrc:/var/www/.bashrc
       - ./docker/appdata/.bashrc:/root/.bashrc
-    command: /bin/sh /startup.sh
 
   mysql:
     image: mysql:${MYSQL_VERSION}

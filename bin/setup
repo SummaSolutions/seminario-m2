@@ -2,26 +2,9 @@
 
 # load variables
 . .env
-. env/setup.env
 
 echo "starting container..."
 bin/start
-sleep 3 #Ensure containers are started...
-
-echo "Copying all files from host to container..."
-#Clear for step below
-rm -rf src/vendor 
-bin/push --all
-
-bin/cli [ -f bin/magento ] && chmod u+x bin/magento
-bin/cli [ -f bin/magento ] && chown www-data:www-data bin/magento
-
-echo "Forcing reinstall of composer deps to ensure perms & reqs..."
-bin/composer install --prefer-dist --ignore-platform-reqs
-
-bin/cli [ -f bin/magento ] && chmod u+x bin/magento
-bin/cli [ -f bin/magento ] && chown www-data:www-data bin/magento
-
 sleep 3 #Ensure containers are started...
 
 bin/magento setup:install \
@@ -64,15 +47,14 @@ echo "Clearing the cache for good measure..."
 bin/magento cache:flush
 
 echo "Copying files from container to host after install..."
-bin/pull app
-bin/pull vendor
+bin/pull --all
 
 echo "Restarting containers with host bind mounts for dev..."
 bin/restart
 
+echo ""
 echo "Docker development environment setup complete."
 echo "You may now access your Magento instance at https://${VIRTUAL_HOST}/"
-echo ""
 echo "You may now access your Admin Magento instance at https://${VIRTUAL_HOST}/admin"
 echo  "Admin user: $M2SETUP_ADMIN_USER"
 echo  "Admin pass: $M2SETUP_ADMIN_PASSWORD"

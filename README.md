@@ -1,6 +1,6 @@
 # Instalar git (Windows)
 
-(https://git-scm.com/download/win)[https://git-scm.com/download/win]
+[https://git-scm.com/download/win](https://git-scm.com/download/win)
 
 # Clonar repositorio de git
 ```bash
@@ -91,6 +91,6 @@ bin/magento
 
 ## Instalar Magento
 ```bash
-bin/magento setup:install --backend-frontname=admin --db-host=mysql --db-name=magento2 --db-user=magento2 --db-password=magento2 --base-url=https://magento2.localhost/ --use-secure-admin=0 --admin-user=admin --admin-password=admin --admin-email=admin@admin.net --admin-firstname=Dev --use-sample-data --admin-lastname=Dev --use-rewrites="1" --language="es_AR"
+bin/magento setup:install --backend-frontname=admin --db-host=mysql --db-name=magento2 --db-user=magento2 --db-password=magento2 --base-url=https://magento2.localhost/ --use-secure-admin=0 --admin-user=admin --admin-password=Admin123 --admin-email=admin@admin.net --admin-firstname=Dev --use-sample-data --admin-lastname=Dev --use-rewrites="1" --language="es_AR"
 ```
 
