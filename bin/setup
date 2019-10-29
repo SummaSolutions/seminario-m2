@@ -7,6 +7,11 @@ echo "starting container..."
 bin/start
 sleep 3 #Ensure containers are started...
 
+echo "set permissions on files and folders"
+bin/cli chmod -R ug+rw /var/www/html/app 
+bin/cli chgrp -R www-data /var/www/html/app
+
+echo "Installing Magento"
 bin/magento setup:install \
     --backend-frontname=admin \
     --db-host=mysql \
