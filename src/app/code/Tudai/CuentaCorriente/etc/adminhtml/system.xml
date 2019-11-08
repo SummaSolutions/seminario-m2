@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<config 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="payment">
+            <group id="tudai_cuentacorriente" 
+                sortOrder="1000" 
+                translate="label" 
+                showInDefault="1" 
+                showInWebsite="1" 
+                showInStore="1">
+                <label>Tudai - Cuenta Corriente</label>
+                <field 
+                    id="active" 
+                    sortOrder="10" 
+                    showInDefault="1" 
+                    showInWebsite="1" 
+                    showInStore="0" 
+                    canRestore="1"
+                    type="select" 
+                    translate="label">
+                    <label>Enabled</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field 
+                    id="title" 
+                    sortOrder="20" 
+                    showInDefault="1" 
+                    showInWebsite="1" 
+                    showInStore="1"
+                    canRestore="1"
+                    type="text" 
+                    translate="label">
+                    <label>Title</label>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>
